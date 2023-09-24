@@ -24,6 +24,18 @@ public interface BlueprintsPersistence {
     public void saveBlueprint(Blueprint bp) throws BlueprintPersistenceException;
     
     /**
+     * Update the given blueprint
+     * 
+     * @param newBp the new blueprint
+     * @param author blueprint's author
+     * @param bprintname blueprint's name
+     * @author Angie Mojica
+     * @author Daniel Santanilla
+     * @throws BlueprintNotFoundException if there is no such blueprint
+     */
+    public void updateBlueprint(Blueprint newBp, String author, String bprintname) throws BlueprintNotFoundException;
+
+    /**
      * 
      * @param author blueprint's author
      * @param bprintname blueprint's author

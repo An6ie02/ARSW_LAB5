@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 /**
  *
  * @author hcadavid
+ * @author Angie Mojica
+ * @author Daniel Santanilla
  */
 @Service
 public class BlueprintsServices {
@@ -28,6 +30,17 @@ public class BlueprintsServices {
 
     public void addNewBlueprint(Blueprint bp) throws BlueprintPersistenceException {
         bpp.saveBlueprint(bp);
+    }
+
+    /**
+     * 
+     * @param bp blueprint to update
+     * @param author blueprint's author
+     * @param name blueprint's name
+     * @throws BlueprintNotFoundException if there is no such blueprint
+     */
+    public void updateBlueprint(Blueprint bp, String author, String name) throws BlueprintNotFoundException {
+        bpp.updateBlueprint(bp, author, name);
     }
 
     public Set<Blueprint> getAllBlueprints() throws BlueprintNotFoundException {

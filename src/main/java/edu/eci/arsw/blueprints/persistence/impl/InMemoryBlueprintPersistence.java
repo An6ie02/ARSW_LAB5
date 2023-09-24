@@ -57,6 +57,16 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence {
     }
 
     @Override
+    public void updateBlueprint(Blueprint newBp, String author, String bprintname) throws BlueprintNotFoundException {
+        Blueprint actualBp = getBlueprint(author, bprintname);
+        if (actualBp != null) {
+            actualBp.setPoints(newBp.getPoints());
+        } else {
+            throw new BlueprintNotFoundException("The given blueprint doesn't exist: " + author + " " + bprintname);
+        }
+    }
+
+    @Override
     public Blueprint getBlueprint(String author, String bprintname) throws BlueprintNotFoundException {
         Blueprint blueprint = blueprints.get(new Tuple<>(author, bprintname));
         if (blueprint == null) {
