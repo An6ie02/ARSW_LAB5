@@ -11,6 +11,8 @@ package edu.eci.arsw.blueprints.persistence;
  */
 public class BlueprintPersistenceException extends Exception {
 
+    public static final String ALREADY_EXISTS = "The given blueprint already exists: ";
+
     public BlueprintPersistenceException(String message) {
         super(message);
     }

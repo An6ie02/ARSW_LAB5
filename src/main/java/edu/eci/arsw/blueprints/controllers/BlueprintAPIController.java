@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.eci.arsw.blueprints.model.Blueprint;
+import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
+import edu.eci.arsw.blueprints.persistence.BlueprintPersistenceException;
 import edu.eci.arsw.blueprints.services.BlueprintsServices;
 
 /**
@@ -42,7 +44,7 @@ public class BlueprintAPIController {
     public ResponseEntity<?> manejadorGetRecursoBlueprints() {
         try {
             return new ResponseEntity<>(bps.getAllBlueprints(), HttpStatus.ACCEPTED);
-        } catch (Exception e) {
+        } catch (BlueprintNotFoundException e) {
             Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -52,7 +54,7 @@ public class BlueprintAPIController {
     public ResponseEntity<?> manejadorGetRecursoBlueprintsByAuthor(@PathVariable("author") String author) {
         try {
             return new ResponseEntity<>(bps.getBlueprintsByAuthor(author), HttpStatus.ACCEPTED);
-        } catch (Exception e) {
+        } catch (BlueprintNotFoundException e) {
             Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -62,7 +64,7 @@ public class BlueprintAPIController {
     public ResponseEntity<?> manejadorGetRecursoBlueprintsByAuthor(@PathVariable("author") String author, @PathVariable("bpname") String bpname) {  
         try {
             return new ResponseEntity<>(bps.getBlueprint(author, bpname), HttpStatus.ACCEPTED);
-        } catch (Exception e) {
+        } catch (BlueprintNotFoundException e) {
             Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -73,7 +75,7 @@ public class BlueprintAPIController {
         try {
             bps.addNewBlueprint(bp);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (BlueprintPersistenceException e) {
             Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
@@ -84,7 +86,7 @@ public class BlueprintAPIController {
         try {
             bps.updateBlueprint(bp, author, bpname);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (BlueprintNotFoundException e) {
             Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }

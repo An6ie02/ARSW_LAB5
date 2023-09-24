@@ -2,7 +2,7 @@
 
 ### Arquitecturas de Software
 
-#### Integrantes : Angie Natalia Mojica - Daniel Antonio Santanilla
+#### **Integrantes : Angie Natalia Mojica - Daniel Antonio Santanilla**
 
 
 #### API REST para la gestión de planos.
@@ -25,7 +25,11 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
 
 1. Integre al proyecto base suministrado los Beans desarrollados en el ejercicio anterior. Sólo copie las clases, NO los archivos de configuración. Rectifique que se tenga correctamente configurado el esquema de inyección de dependencias con las anotaciones @Service y @Autowired.
 
+	Del laboratorio anterior se copiaron las respectivas clases.
+
 2. Modifique el bean de persistecia 'InMemoryBlueprintPersistence' para que por defecto se inicialice con al menos otros tres planos, y con dos asociados a un mismo autor.
+   
+   Se agregaron otros 3 planos en el constructor de la clase InMemoryBlueprintPersistence.
 
 3. Configure su aplicación para que ofrezca el recurso "/blueprints", de manera que cuando se le haga una petición GET, retorne -en formato jSON- el conjunto de todos los planos. Para esto:
 
@@ -51,6 +55,8 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
 	```
 	* Haga que en esta misma clase se inyecte el bean de tipo BlueprintServices (al cual, a su vez, se le inyectarán sus dependencias de persisntecia y de filtrado de puntos).
 
+	En la clase `BlueprintAPIController` se inyecta el bean de tipo BlueprintServices y se hace un controlador REST para el recurso /blueprints.
+
 4. Verifique el funcionamiento de a aplicación lanzando la aplicación con maven:
 
 	```bash
@@ -60,11 +66,22 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
 	```
 	Y luego enviando una petición GET a: http://localhost:8080/blueprints. Rectifique que, como respuesta, se obtenga un objeto jSON con una lista que contenga el detalle de los planos suministados por defecto, y que se haya aplicado el filtrado de puntos correspondiente.
 
+	Se actualizó la dependencia de spring-boot-starter-parent a la versión 1.5.0.RELEASE en el archivo pom.xml para que la aplicación corra correctamente.
+
+	![peticionget](./img/media/peticionget.png)
+
 
 5. Modifique el controlador para que ahora, acepte peticiones GET al recurso /blueprints/{author}, el cual retorne usando una representación jSON todos los planos realizados por el autor cuyo nombre sea {author}. Si no existe dicho autor, se debe responder con el código de error HTTP 404. Para esto, revise en [la documentación de Spring](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html), sección 22.3.2, el uso de @PathVariable. De nuevo, verifique que al hacer una petición GET -por ejemplo- a recurso http://localhost:8080/blueprints/juan, se obtenga en formato jSON el conjunto de planos asociados al autor 'juan' (ajuste esto a los nombres de autor usados en el punto 2).
 
+	![peticiongetbyauthor](./img/media/peticiongetbyauthor.png)
+
+	![peticiongetbynoauthor](./img/media/peticiongetbynoauthor.png)
+
 6. Modifique el controlador para que ahora, acepte peticiones GET al recurso /blueprints/{author}/{bpname}, el cual retorne usando una representación jSON sólo UN plano, en este caso el realizado por {author} y cuyo nombre sea {bpname}. De nuevo, si no existe dicho autor, se debe responder con el código de error HTTP 404. 
 
+	![peticiongetbyauthorbpname](./img/media/peticiongetbyauthorbpname.png)
+
+	![peticiongetbynoauthorbpname](./img/media/peticiongetbynoauthorbpname.png)
 
 
 ### Parte II
@@ -105,14 +122,22 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
 	
 	Nota: puede basarse en el formato jSON mostrado en el navegador al consultar una orden con el método GET.
 
+	![peticionpostcmd](./img/media/peticionpostcmd.png)
+
 
 3. Teniendo en cuenta el autor y numbre del plano registrado, verifique que el mismo se pueda obtener mediante una petición GET al recurso '/blueprints/{author}/{bpname}' correspondiente.
+
+	![peticionpost](./img/media/peticionpost.png)
 
 4. Agregue soporte al verbo PUT para los recursos de la forma '/blueprints/{author}/{bpname}', de manera que sea posible actualizar un plano determinado.
    
    ```bash
 	curl -i -X PUT -HContent-Type:application/json -HAccept:application/json http://localhost:8080/blueprints/daniel/bppost -d "{\"author\": \"daniel\",\"points\": [{\"x\": 911,\"y\": 911},{\"x\": 922,\"y\": 922}],\"name\": \"bppost\"}"
 	```
+
+	![peticionputcmd](./img/media/peticionputcmd.png)
+
+	![peticionput](./img/media/peticionput.png)
 
 
 ### Parte III

@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class InMemoryBlueprintPersistence implements BlueprintsPersistence {
 
-    private final Map<Tuple<String, String>, Blueprint> blueprints = new HashMap<>();
+    private final Map<Tuple<String, String>, Blueprint> blueprints = new ConcurrentHashMap<>();
 
     public InMemoryBlueprintPersistence() {
         // load stub data
@@ -50,9 +51,9 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence {
     @Override
     public void saveBlueprint(Blueprint bp) throws BlueprintPersistenceException {
         if (blueprints.containsKey(new Tuple<>(bp.getAuthor(), bp.getName()))) {
-            throw new BlueprintPersistenceException("The given blueprint already exists: " + bp);
+            throw new BlueprintPersistenceException(BlueprintPersistenceException.ALREADY_EXISTS + bp);
         } else {
-            blueprints.put(new Tuple<>(bp.getAuthor(), bp.getName()), bp);
+            blueprints.putIfAbsent(new Tuple<>(bp.getAuthor(), bp.getName()), bp);
         }
     }
 
@@ -62,7 +63,7 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence {
         if (actualBp != null) {
             actualBp.setPoints(newBp.getPoints());
         } else {
-            throw new BlueprintNotFoundException("The given blueprint doesn't exist: " + author + " " + bprintname);
+            throw new BlueprintNotFoundException(BlueprintNotFoundException.NOT_EXIST + author + bprintname);
         }
     }
 
@@ -70,7 +71,7 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence {
     public Blueprint getBlueprint(String author, String bprintname) throws BlueprintNotFoundException {
         Blueprint blueprint = blueprints.get(new Tuple<>(author, bprintname));
         if (blueprint == null) {
-            throw new BlueprintNotFoundException("The given blueprint doesn't exist: " + author + " " + bprintname);
+            throw new BlueprintNotFoundException(BlueprintNotFoundException.NOT_EXIST + author + bprintname);
         }
         return blueprint;
     }
@@ -80,7 +81,7 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence {
         Set<Blueprint> allBlueprints = new HashSet<Blueprint>();
         blueprints.forEach((key, value) -> allBlueprints.add(value));
         if (allBlueprints.isEmpty()) {
-            throw new BlueprintNotFoundException("There are no blueprints");
+            throw new BlueprintNotFoundException(BlueprintNotFoundException.NO_BLUEPRINTS);
         }
         return allBlueprints;
     }
@@ -94,7 +95,7 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence {
             }
         });
         if (blueprintsByAuthor.isEmpty()) {
-            throw new BlueprintNotFoundException("There are no blueprints by this author");
+            throw new BlueprintNotFoundException(BlueprintNotFoundException.NO_BLUEPRINTS_BY_AUTHOR);
         }
         return blueprintsByAuthor;
     }
