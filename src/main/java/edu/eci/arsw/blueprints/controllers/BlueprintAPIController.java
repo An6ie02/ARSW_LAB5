@@ -7,18 +7,64 @@ package edu.eci.arsw.blueprints.controllers;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.eci.arsw.blueprints.model.Blueprint;
+import edu.eci.arsw.blueprints.services.BlueprintsServices;
+
 /**
  *
  * @author hcadavid
+ * @author Angie Mojica
+ * @author Daniel Santanilla
  */
+@RestController
+@RequestMapping(value = "/blueprints")
 public class BlueprintAPIController {
+
+    @Autowired
+    BlueprintsServices bps;
     
-    
+    @GetMapping(produces = "application/json")
+    public ResponseEntity<?> manejadorGetRecursoBlueprints() {
+        try {
+            return new ResponseEntity<>(bps.getAllBlueprints(), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping(path="/{author}", produces = "application/json")
+    public ResponseEntity<?> manejadorGetRecursoBlueprintsByAuthor(@PathVariable("author") String author) {
+        try {
+            return new ResponseEntity<>(bps.getBlueprintsByAuthor(author), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping(path="/{author}/{bpname}", produces = "application/json")
+    public ResponseEntity<?> manejadorGetRecursoBlueprintsByAuthor(@PathVariable("author") String author, @PathVariable("bpname") String bpname) {  
+        try {
+            return new ResponseEntity<>(bps.getBlueprint(author, bpname), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
     
     
     

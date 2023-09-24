@@ -2,6 +2,7 @@
 
 ### Arquitecturas de Software
 
+#### Integrantes : Angie Natalia Mojica - Daniel Antonio Santanilla
 
 
 #### API REST para la gestión de planos.
